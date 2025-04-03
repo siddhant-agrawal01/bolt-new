@@ -1,4 +1,6 @@
 "use client";
+import { MessagesContext } from "@/context/MessagesContext";
+import { UserDetailContext } from "@/context/UserDetailContext";
 import Lookup from "@/data/Lookup";
 import {
   ArrowRight,
@@ -9,13 +11,29 @@ import {
   Star,
   Zap,
 } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import SignInDialog from "./SignInDialog";
 
 function Hero() {
   const [userInput, setUserInput] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const { messages, setMessages } = useContext(MessagesContext);
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const onGenerate = (input) => {
+    if (!userDetail?.name) {
+      setOpenDialog(true);
+      return;
+    }
+    setMessages({
+      role: "user",
+      content: input,
+    });
+  };
 
   // Handle mouse movement for parallax effect
   useEffect(() => {
@@ -193,6 +211,7 @@ function Hero() {
                     </div>
 
                     <button
+                      onClick={() => onGenerate(userInput)}
                       className={`flex items-center justify-center gap-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-500/20 transition-all duration-300 ${
                         !userInput ? "opacity-80 cursor-not-allowed" : ""
                       }`}
@@ -211,15 +230,20 @@ function Hero() {
               {Lookup?.SUGGESTIONS.map((suggestion, index) => (
                 <div
                   key={index}
+                  onClick={() => onGenerate(suggestion)}
                   className={`py-1 px-3 rounded-full text-sm font-medium bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer hover:border-green-200 dark:hover:border-green-800 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all delay-${
                     index * 100
                   }`}
-                  onClick={() => setUserInput(suggestion)}
+                  // onClick={() => setUserInput(suggestion)}
                 >
                   {suggestion}
                 </div>
               ))}
             </div>
+            <SignInDialog
+              openDialog={openDialog}
+              closeDialog={(v) => setOpenDialog(v)}
+            />
           </div>
 
           {/* Feature highlights */}
