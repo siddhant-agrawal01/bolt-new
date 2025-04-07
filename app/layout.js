@@ -2,11 +2,13 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./provider";
-import Header from "@/components/ui/custom/Header";
-import { MessagesContext } from "@/context/MessagesContext";
-import { useState } from "react";
-import { UserDetailContext } from "@/context/UserDetailContext";
+import Provider from "./provider";
+import { ConvexClientProvider } from "./ConvexClientProvider";
+// import { ThemeProvider } from "./provider";
+// import Header from "@/components/ui/custom/Header";
+// import { MessagesContext } from "@/context/MessagesContext";
+// import { useState } from "react";
+// import { UserDetailContext } from "@/context/UserDetailContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,17 +20,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-//
-
 export default function RootLayout({ children }) {
-  const [messages, setMessages] = useState();
-  const [userDetail, setUserDetail] = useState();
+  // const [messages, setMessages] = useState();
+  // const [userDetail, setUserDetail] = useState();
   return (
     <html lang="en" suppressContentEditableWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <UserDetailContext.Provider value={{userDetail, setUserDetail }}>
+        {/* <UserDetailContext.Provider value={{userDetail, setUserDetail }}>
           <MessagesContext.Provider value={{ messages, setMessages }}>
             <ThemeProvider
               attribute="class"
@@ -36,11 +36,13 @@ export default function RootLayout({ children }) {
               enableSystem
               disableTransitionOnChange
             >
-              <Header />
-              {children}
-            </ThemeProvider>
+              <Header /> */}
+        <ConvexClientProvider>
+          <Provider>{children}</Provider>
+        </ConvexClientProvider>
+        {/* </ThemeProvider>
           </MessagesContext.Provider>
-        </UserDetailContext.Provider>
+        </UserDetailContext.Provider> */}
       </body>
     </html>
   );
