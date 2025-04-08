@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { UserDetailContext } from "@/context/UserDetailContext";
+import { useContext, useEffect, useState } from "react";
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
+  // const { userDetail, setUserDetail } = useContext(UserDetailContext);
 
   // Handle scroll effect
   useEffect(() => {
@@ -54,9 +56,12 @@ function App() {
                 </li>
               ))}
             </ul>
-            <button className="bg-gradient-to-r from-coral-500 to-magenta-500 px-5 py-2 rounded-full text-white font-medium text-sm hover:shadow-lg hover:shadow-coral-500/20 transition-all duration-300">
-              Get Started
-            </button>
+            {/* {!userDetail.name &&  */}
+              <button className="bg-gradient-to-r from-coral-500 to-magenta-500 px-5 py-2 rounded-full text-white font-medium text-sm hover:shadow-lg hover:shadow-coral-500/20 transition-all duration-300">
+                Get Started
+              </button>
+            
+            {/* } */}
           </div>
 
           {/* Mobile menu button */}
