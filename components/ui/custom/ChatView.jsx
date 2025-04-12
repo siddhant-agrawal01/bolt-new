@@ -97,20 +97,23 @@ const ChatView = () => {
   //   });
   //   setUserInput("");
   // };
-  
+
   const onGenerate = (input) => {
     setMessages((prev) => {
-      return [...prev, {
-        role: "user",
-        content: input,
-      }];
+      return [
+        ...prev,
+        {
+          role: "user",
+          content: input,
+        },
+      ];
     });
     setUserInput("");
   };
 
   return (
     <div className="p-4 relative h-[85vh] flex flex-col">
-      <div className="flex-1 overflow-y-scroll scrollbar-hide">
+      <div className="flex-1 overflow-y-scroll hide-scrollbar">
         {messages && messages.length > 0 ? (
           messages.map((msg, index) => (
             <div
@@ -129,7 +132,11 @@ const ChatView = () => {
                   className="rounded-full"
                 />
               )}
-              <ReactMarkdown>{msg.content}</ReactMarkdown>
+             <div className="flex flex-col">
+  <ReactMarkdown>
+    {msg.content}
+  </ReactMarkdown>
+</div>
             </div>
           ))
         ) : (
