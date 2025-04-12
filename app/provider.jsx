@@ -66,8 +66,9 @@ function Provider({ children }) {
               defaultTheme="dark"
               enableSystem
               disableTransitionOnChange
+              
             >
-              <Header />
+              {/* <Header /> */}
               {children}
             </NextThemesProvider>
           </MessagesContext.Provider>

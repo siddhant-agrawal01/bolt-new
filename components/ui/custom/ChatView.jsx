@@ -1,11 +1,11 @@
 "use client";
-
+import ReactMarkdown from "react-markdown";
 import { MessagesContext } from "@/context/MessagesContext";
 import { UserDetailContext } from "@/context/UserDetailContext";
 import { api } from "@/convex/_generated/api";
 import Colors from "@/data/Colors";
 import Lookup from "@/data/Lookup";
-import { useConvex } from "convex/react";
+import { useConvex, useMutation } from "convex/react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
@@ -14,6 +14,7 @@ import {
   ArrowRight,
   ChevronRight,
   Globe,
+  Loader2Icon,
   Shield,
   Sparkles,
   Star,
@@ -25,9 +26,13 @@ const ChatView = () => {
   const { id } = useParams();
   const convex = useConvex();
   const [userInput, setUserInput] = useState("");
+  const [isFocused, setIsFocused] = useState(false); // Add this line to define the state
 
   const { messages, setMessages } = useContext(MessagesContext);
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const [loading, setLoading] = useState(false);
+
+  const UpdateMessages = useMutation(api.workspace.UpadateMessages);
 
   useEffect(() => {
     id && GetWorkspaceData();
@@ -58,17 +63,54 @@ const ChatView = () => {
   }, [messages]);
 
   const GetAiResponse = async () => {
+    setLoading(true);
     const PROMPT = JSON.stringify(messages) + Prompt.CHAT_PROMPT;
 
     const result = await axios.post("/api/ai-chat", {
       prompt: PROMPT,
     });
-    console.log("AI response:", result.data.result);
+    // console.log("AI response:", result.data.result);
+    const aiResp = {
+      content: result.data.result,
+      role: "ai",
+    };
+
+    setMessages((prev) => {
+      return [...prev, aiResp];
+    });
+    await UpdateMessages({
+      message: [...messages, aiResp],
+      workspaceId: id,
+    });
+    setLoading(false);
+  };
+
+  // const onGenerate = (input) => {
+  //   setMessages((prev) => {
+  //     [
+  //       ...prev,
+  //       {
+  //         role: "user",
+  //         content: input,
+  //       },
+  //     ];
+  //   });
+  //   setUserInput("");
+  // };
+  
+  const onGenerate = (input) => {
+    setMessages((prev) => {
+      return [...prev, {
+        role: "user",
+        content: input,
+      }];
+    });
+    setUserInput("");
   };
 
   return (
     <div className="p-4 relative h-[85vh] flex flex-col">
-      <div className="flex-1 overflow-y-scroll">
+      <div className="flex-1 overflow-y-scroll scrollbar-hide">
         {messages && messages.length > 0 ? (
           messages.map((msg, index) => (
             <div
@@ -87,11 +129,22 @@ const ChatView = () => {
                   className="rounded-full"
                 />
               )}
-              <h2 className="text-3xl">{msg.content}</h2>
+              <ReactMarkdown>{msg.content}</ReactMarkdown>
             </div>
           ))
         ) : (
           <p>No messages available</p>
+        )}
+        {loading && (
+          <div
+            className="mb-4 p-3 rounded-lg flex gap-2 items-start leading-7  border-b"
+            style={{
+              backgroundColor: Colors.CHAT_BACKGROUND,
+            }}
+          >
+            <Loader2Icon className="animate-spin" />
+            <h2>Generating Repsonse...</h2>
+          </div>
         )}
       </div>
 
@@ -121,17 +174,14 @@ const ChatView = () => {
               <Shield className="h-4 w-4" />
               <span>Your data is encrypted end-to-end</span>
             </div>
+            {/* ---------------button--------- */}
 
-            <button
-              onClick={() => onGenerate(userInput)}
-              className={`flex items-center justify-center gap-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-500/20 transition-all duration-300 ${
-                !userInput ? "opacity-80 cursor-not-allowed" : ""
-              }`}
-              disabled={!userInput}
-            >
-              <span>Get Started</span>
-              <ArrowRight className="h-4 w-4" />
-            </button>
+            {userInput && (
+              <ArrowRight
+                onClick={() => onGenerate(userInput)}
+                className="h-10 w-10  bg-green-600"
+              />
+            )}
           </div>
         </div>
       </div>
@@ -140,3 +190,15 @@ const ChatView = () => {
 };
 
 export default ChatView;
+
+// <button
+// onClick={() => onGenerate(userInput)}
+// className={`flex items-center justify-center gap-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-500/20 transition-all duration-300 ${
+//   !userInput ? "opacity-80 cursor-not-allowed" : ""
+// }`}
+// disabled={!userInput}
+// >
+// {/* <span>Get Started</span> */}
+// <ArrowRight               onClick={() => onGenerate(userInput)}
+// className="h-4 w-4" />
+// </button>

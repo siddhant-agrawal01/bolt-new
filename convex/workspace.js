@@ -24,3 +24,20 @@ export const GetWorkspace = query({
     return result;
   },
 });
+
+export const UpadateMessages = mutation({
+  args: {
+    workspaceId: v.id("workspace"),
+    // messages: v.any(),
+    message: v.any(),
+
+  },
+  handler: async (ctx, args) => {
+    const result = await ctx.db.patch(args.workspaceId, {
+      // messages: args.messages,
+      message: args.message,
+
+    });
+    return result;
+  },
+});
