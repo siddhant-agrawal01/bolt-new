@@ -132,11 +132,9 @@ const ChatView = () => {
                   className="rounded-full"
                 />
               )}
-             <div className="flex flex-col">
-  <ReactMarkdown>
-    {msg.content}
-  </ReactMarkdown>
-</div>
+              <div className="flex flex-col">
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
+              </div>
             </div>
           ))
         ) : (
@@ -184,10 +182,16 @@ const ChatView = () => {
             {/* ---------------button--------- */}
 
             {userInput && (
-              <ArrowRight
+              <button
                 onClick={() => onGenerate(userInput)}
-                className="h-10 w-10  bg-green-600"
-              />
+                className={`flex items-center justify-center gap-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-500/20 transition-all duration-300 
+             `}
+              >
+                <ArrowRight
+                  onClick={() => onGenerate(userInput)}
+                  className="h-5 w-5 "
+                />
+              </button>
             )}
           </div>
         </div>
@@ -197,15 +201,3 @@ const ChatView = () => {
 };
 
 export default ChatView;
-
-// <button
-// onClick={() => onGenerate(userInput)}
-// className={`flex items-center justify-center gap-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-500/20 transition-all duration-300 ${
-//   !userInput ? "opacity-80 cursor-not-allowed" : ""
-// }`}
-// disabled={!userInput}
-// >
-// {/* <span>Get Started</span> */}
-// <ArrowRight               onClick={() => onGenerate(userInput)}
-// className="h-4 w-4" />
-// </button>
