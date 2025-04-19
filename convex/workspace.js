@@ -30,13 +30,26 @@ export const UpadateMessages = mutation({
     workspaceId: v.id("workspace"),
     // messages: v.any(),
     message: v.any(),
-
   },
   handler: async (ctx, args) => {
     const result = await ctx.db.patch(args.workspaceId, {
       // messages: args.messages,
       message: args.message,
+    });
+    return result;
+  },
+});
 
+export const UpadateFiles = mutation({
+  args: {
+    workspaceId: v.id("workspace"),
+    // messages: v.any(),
+    files: v.any(),
+  },
+  handler: async (ctx, args) => {
+    const result = await ctx.db.patch(args.workspaceId, {
+      // messages: args.messages,
+      fileData: args.files,
     });
     return result;
   },
