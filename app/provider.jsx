@@ -8,6 +8,7 @@
 // export default Provider;
 
 "use client";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import Header from "@/components/ui/custom/Header";
@@ -17,6 +18,7 @@ import { UserDetailContext } from "@/context/UserDetailContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import AppSideBar from "@/components/ui/custom/AppSideBar";
 
 function Provider({ children }) {
   const [messages, setMessages] = useState();
@@ -66,10 +68,10 @@ function Provider({ children }) {
               defaultTheme="dark"
               enableSystem
               disableTransitionOnChange
-              
             >
               {/* <Header /> */}
-              {children}
+              <SidebarProvider defaultOpen={false}>
+              <AppSideBar />{children}</SidebarProvider>
             </NextThemesProvider>
           </MessagesContext.Provider>
         </UserDetailContext.Provider>
