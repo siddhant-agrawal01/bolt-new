@@ -41,12 +41,12 @@ function Header() {
   return (
     <header
       className={`fixed top-0   left-0 right-0 w-full z-50 ${
-        isScrolled ? "backdrop-blur-md bg-green/70" : "bg-black/150"
+        isScrolled ? "backdrop-blur-md bg-gray/70" : "bg-black/150"
       } transition-all duration-300`}
     >
       <div className="p-4 flex justify-between items-center border-b max-w-[1440px] mx-auto">
         <Link href={"/"}>
-          <div className="flex items-center">
+          <div className="flex items-center italic">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
