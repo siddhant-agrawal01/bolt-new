@@ -11,6 +11,14 @@ import Colors from "@/data/Colors";
 import Image from "next/image";
 import { LucideDownload } from "lucide-react";
 
+// import React, { useContext } from "react";
+// import { Button } from "../button";
+import { useGoogleLogin } from "@react-oauth/google";
+// import { UserDetailContext } from "@/context/UserDetailContext";
+// import { useMutation } from "convex/react";
+// import { api } from "@/convex/_generated/api";
+import uuid4 from "uuid4";
+
 function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
@@ -37,6 +45,33 @@ function Header() {
       timeStamp: Date.now(),
     });
   };
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse);
+      const userInfo = await axios.get(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        { headers: { Authorization: "Bearer" + tokenResponse?.access_token } }
+      );
+
+      console.log(userInfo);
+      const user = userInfo?.data;
+      await CreateUser({
+        name: user?.name,
+        email: user?.email,
+        picture: user?.picture,
+        uid: uuid4(),
+      });
+
+      //saving users to locastorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+
+      setUserDetail(userInfo?.data);
+      closeDialog(false);
+    },
+    onError: (errorResponse) => console.log(errorResponse),
+  });
 
   return (
     <header
@@ -61,23 +96,24 @@ function Header() {
             >
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
-           <div className="text-2xl font-bold italic text-yellow-500">
-Flash
-
-           </div>
+            <div className="text-2xl font-bold italic text-yellow-500">
+              Flash
+            </div>
           </div>
         </Link>
         {!userDetail?.name ? (
           <div className="flex gap-5">
-            <Button variant="ghost">Sign In</Button>
-            <Button
+            <Button className="bg-green-400" onClick={googleLogin} variant="outline">
+              Sign In
+            </Button>
+            {/* <Button
               className="text-white"
               style={{
                 backgroundColor: Colors.BLUE,
               }}
             >
               Get Started
-            </Button>
+            </Button> */}
           </div>
         ) : (
           <div className="flex gap-3 items-center">

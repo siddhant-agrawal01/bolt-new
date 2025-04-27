@@ -15,7 +15,7 @@ function Footer() {
     sessionStorage.removeItem("userDetail");
 
     // Redirect to login page
-    router.push("/login");
+    router.push("/");
   };
 
   return (
