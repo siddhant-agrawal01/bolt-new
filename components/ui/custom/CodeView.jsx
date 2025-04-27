@@ -14,6 +14,8 @@ import Prompt from "@/data/Prompt";
 import { useConvex, useMutation } from "convex/react";
 import { useParams } from "next/navigation";
 import { api } from "@/convex/_generated/api";
+import SandpackPreviewClient from "./SandpackPreviewClient";
+import { ActionContext } from "@/context/ActionContext";
 
 const CodeView = () => {
   const { id } = useParams();
@@ -24,11 +26,14 @@ const CodeView = () => {
   const UpdateFiles = useMutation(api.workspace.UpadateFiles);
   const convex = useConvex();
   const [loading, setLoading] = useState(false);
+  const { action, setAction } = useContext(ActionContext);
 
   useEffect(() => {
     id && GetFiles();
   }, [id]);
-
+  useEffect(() => {
+    setActiveTab("preview");
+  }, [action]);
   const GetFiles = async () => {
     setLoading(true);
     const result = await convex.query(api.workspace.GetWorkspace, {
@@ -138,10 +143,11 @@ const CodeView = () => {
               </>
             ) : (
               <>
-                <SandpackPreview
+                {/* <SandpackPreview
                   style={{ height: "100vh" }}
                   showNavigator={true}
-                />
+                /> */}
+                <SandpackPreviewClient />
               </>
             )}
           </SandpackLayout>
