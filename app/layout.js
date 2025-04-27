@@ -6,7 +6,7 @@ import "./globals.css";
 import Provider from "./provider";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 // import { ThemeProvider } from "./provider";
-// import Header from "@/components/ui/custom/Header";
+import Header from "@/components/ui/custom/Header";
 // import { MessagesContext } from "@/context/MessagesContext";
 // import { useState } from "react";
 // import { UserDetailContext } from "@/context/UserDetailContext";
@@ -38,8 +38,14 @@ export default function RootLayout({ children }) {
               disableTransitionOnChange
             >
               <Header /> */}
+               {/* <Header />/ */}
         <ConvexClientProvider>
-          <Provider>{children}</Provider>
+          <Provider>
+          <Header />
+
+          <main className="pt-16"> {/* Add padding top to compensate for fixed header */}
+          {children}
+        </main></Provider>
         </ConvexClientProvider>
         {/* </ThemeProvider>
           </MessagesContext.Provider>

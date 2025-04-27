@@ -79,9 +79,10 @@ function Provider({ children }) {
                 enableSystem
                 disableTransitionOnChange
               >
-                {/* <Header /> */}
                 <SidebarProvider defaultOpen={false}>
+
                   <AppSideBar />
+                  
                   {children}
                 </SidebarProvider>
               </NextThemesProvider>
