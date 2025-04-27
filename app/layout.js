@@ -43,9 +43,8 @@ export default function RootLayout({ children }) {
           <Provider>
           <Header />
 
-          <main className="pt-16"> {/* Add padding top to compensate for fixed header */}
           {children}
-        </main></Provider>
+        </Provider>
         </ConvexClientProvider>
         {/* </ThemeProvider>
           </MessagesContext.Provider>
